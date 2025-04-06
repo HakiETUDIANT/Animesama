@@ -14,5 +14,6 @@
   "scriptUrl": "https://raw.githubusercontent.com/HakiETUDIANT/Animesama/refs/heads/main/Animesama.js",
   "type": "shows",
   "asyncJS": true,
-  "enabled": true
+  "enabled": true,
+  "responseType": "object" // NOUVELLE LIGNE AJOUTÉE
 }
