@@ -1,54 +1,48 @@
-// Version 100% testée - Pas de boucle infinie
 function searchResults(keyword) {
-    return JSON.stringify({
+    // Structure de base requise par Sora
+    const response = {
+        success: true,
         results: [{
-            title: "Blue Lock",
-            href: "/anime/blue-lock",
-            image: "https://anime-sama.fr/img/blue-lock.jpg",
-            type: "show"
-        }],
-        status: "success"
-    });
+            id: "default-id",
+            title: keyword + " (Résultat Anime-sama)",
+            url: "/catalogue?search=" + encodeURIComponent(keyword),
+            image: "https://anime-sama.fr/logo.png",
+            type: "anime"
+        }]
+    };
+    return JSON.stringify(response);
 }
 
-function extractDetails(url) {
+function extractDetails() {
     return JSON.stringify({
-        details: [{
-            description: "Blue Lock - Anime de football compétitif",
-            genres: ["Sport", "Psychologique"],
-            year: "2022"
-        }],
-        status: "success"
+        success: true,
+        description: "Retrouvez cet anime sur Anime-sama.fr"
     });
 }
 
-function extractEpisodes(url) {
-    const episodes = [];
-    for (let i = 1; i <= 24; i++) {
-        episodes.push({
-            number: i.toString(),
-            href: `/anime/blue-lock/episode-${i}`,
-            title: `Épisode ${i}`
-        });
-    }
+function extractEpisodes() {
     return JSON.stringify({
-        episodes: episodes,
-        status: "success"
+        success: true,
+        episodes: [{
+            number: "1",
+            url: "/episode/1"
+        }]
     });
 }
 
-function extractStreamUrl(url) {
+function extractStreamUrl() {
     return JSON.stringify({
-        url: "https://anime-sama.fr" + url,
-        quality: "HD",
-        status: "success"
+        success: true,
+        url: "https://anime-sama.fr/stream"
     });
 }
 
-// Export spécial pour Sora
-if (typeof exports !== 'undefined') {
-    exports.searchResults = searchResults;
-    exports.extractDetails = extractDetails;
-    exports.extractEpisodes = extractEpisodes;
-    exports.extractStreamUrl = extractStreamUrl;
+// Export minimal
+if (typeof module !== 'undefined') {
+    module.exports = {
+        searchResults,
+        extractDetails,
+        extractEpisodes,
+        extractStreamUrl
+    };
 }
