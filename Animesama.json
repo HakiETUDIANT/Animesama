@@ -11,7 +11,7 @@
   "quality": "HD",
   "baseUrl": "https://anime-sama.fr",
   "searchBaseUrl": "https://anime-sama.fr/catalogue?search=%s",
-  "scriptUrl": "https://raw.githubusercontent.com/[VOTRE_USER]/[VOTRE_REPO]/main/animesama.js",
+  "scriptUrl": "https://raw.githubusercontent.com/HakiETUDIANT/Animesama/main/animesama.js",
   "type": "shows",
   "asyncJS": true,
   "enabled": true
