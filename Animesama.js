@@ -1,83 +1,90 @@
-// Fonction fetch améliorée avec timeout
-async function fetchWithTimeout(url, timeout = 5000) {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeout);
-  
-  const response = await fetch(url, {
-    signal: controller.signal,
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-      'Accept-Language': 'fr-FR,fr;q=0.9'
-    }
-  });
-  
-  clearTimeout(timeoutId);
-  return response.text();
+// Version compatible sans AbortController
+async function fetchHtml(url) {
+    const response = await fetch(url, {
+        headers: {
+            'User-Agent': 'Mozilla/5.0',
+            'Accept': 'text/html'
+        }
+    });
+    return await response.text();
 }
 
-// Recherche des animes
+// Recherche des animes (version simplifiée et compatible)
 async function searchResults(keyword) {
-  try {
-    const html = await fetchWithTimeout(`https://anime-sama.fr/catalogue?search=${encodeURIComponent(keyword)}`);
-    
-    // Parseur DOM robuste
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    
-    // Sélecteurs mis à jour (à vérifier sur le site)
-    const items = Array.from(doc.querySelectorAll('.card-anime')).map(item => ({
-      title: item.querySelector('.title-anime')?.textContent.trim() || 'Titre inconnu',
-      href: item.querySelector('a')?.getAttribute('href') || '#',
-      image: item.querySelector('img')?.getAttribute('src') || ''
-    }));
+    try {
+        const html = await fetchHtml(`https://anime-sama.fr/catalogue?search=${encodeURIComponent(keyword)}`);
+        
+        // Solution de repli si DOMParser n'existe pas
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        
+        const results = [];
+        const items = tempDiv.querySelectorAll('.anime, .card'); // Sélecteurs alternatifs
+        
+        items.forEach(item => {
+            const link = item.querySelector('a');
+            const img = item.querySelector('img');
+            
+            if (link && img) {
+                results.push({
+                    title: link.getAttribute('title') || link.textContent.trim(),
+                    href: link.getAttribute('href'),
+                    image: img.getAttribute('src') || ''
+                });
+            }
+        });
 
-    return JSON.stringify(items.filter(item => item.href !== '#'));
-    
-  } catch (error) {
-    console.error(`Search error: ${error}`);
-    return JSON.stringify([]);
-  }
+        return JSON.stringify(results.length > 0 ? results : []);
+        
+    } catch (error) {
+        console.log("Erreur recherche:", error);
+        return JSON.stringify([]);
+    }
 }
 
-// Détails de l'anime
+// Détails (version basique)
 async function extractDetails(url) {
-  return JSON.stringify([{
-    description: "Anime disponible sur Anime-sama",
-    aliases: "",
-    airdate: ""
-  }]);
+    return JSON.stringify([{
+        description: "Anime disponible sur Anime-sama",
+        aliases: "",
+        airdate: ""
+    }]);
 }
 
-// Liste des épisodes
+// Épisodes (version compatible)
 async function extractEpisodes(url) {
-  try {
-    const html = await fetchWithTimeout(`https://anime-sama.fr${url}`);
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    
-    const episodes = Array.from(doc.querySelectorAll('.episode-list a')).map(ep => ({
-      number: ep.textContent.match(/\d+/)?.[0] || '0',
-      href: ep.getAttribute('href')
-    }));
+    try {
+        const html = await fetchHtml(`https://anime-sama.fr${url}`);
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        
+        const episodes = [];
+        tempDiv.querySelectorAll('.episode a, .episode-list a').forEach(ep => {
+            episodes.push({
+                number: ep.textContent.match(/\d+/)?.[0] || '0',
+                href: ep.getAttribute('href')
+            });
+        });
 
-    return JSON.stringify(episodes.reverse()); // Du plus récent au plus ancien
-    
-  } catch (error) {
-    console.error(`Episodes error: ${error}`);
-    return JSON.stringify([]);
-  }
+        return JSON.stringify(episodes);
+        
+    } catch (error) {
+        console.log("Erreur épisodes:", error);
+        return JSON.stringify([]);
+    }
 }
 
-// Lien de streaming
+// URL de streaming
 async function extractStreamUrl(url) {
-  return `https://anime-sama.fr${url}`;
+    return `https://anime-sama.fr${url}`;
 }
 
 // Export pour Sora
 if (typeof module !== 'undefined') {
-  module.exports = {
-    searchResults,
-    extractDetails,
-    extractEpisodes,
-    extractStreamUrl
-  };
+    module.exports = {
+        searchResults,
+        extractDetails,
+        extractEpisodes,
+        extractStreamUrl
+    };
 }
