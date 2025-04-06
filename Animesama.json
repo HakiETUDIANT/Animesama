@@ -1,10 +1,9 @@
 {
-  "sourceName": "Anime-sama Safe",
-  "iconUrl": "",
-  "version": "1.0",
-  "language": "fr",
+  "sourceName": "Anime-sama Fix",
+  "version": "1.1",
   "baseUrl": "https://anime-sama.fr",
   "scriptUrl": "https://raw.githubusercontent.com/[USER]/[REPO]/main/animesama.js",
   "type": "shows",
-  "asyncJS": false
+  "asyncJS": false,
+  "responseType": "object"
 }
