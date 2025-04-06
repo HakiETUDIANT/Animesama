@@ -1,48 +1,60 @@
+// Format 100% compatible Sora
 function searchResults(keyword) {
-    // Structure de base requise par Sora
     const response = {
-        success: true,
-        results: [{
-            id: "default-id",
-            title: keyword + " (Résultat Anime-sama)",
-            url: "/catalogue?search=" + encodeURIComponent(keyword),
+        status: "success",
+        data: [{
+            id: "search-redirect",
+            title: "Résultats pour: " + keyword,
+            url: "https://anime-sama.fr/catalogue?search=" + encodeURIComponent(keyword),
             image: "https://anime-sama.fr/logo.png",
             type: "anime"
-        }]
+        }],
+        pagination: {
+            hasNextPage: false
+        }
     };
     return JSON.stringify(response);
 }
 
 function extractDetails() {
     return JSON.stringify({
-        success: true,
-        description: "Retrouvez cet anime sur Anime-sama.fr"
+        status: "success",
+        data: {
+            description: "Cliquez pour voir les épisodes sur Anime-sama",
+            episodesCount: 1
+        }
     });
 }
 
 function extractEpisodes() {
     return JSON.stringify({
-        success: true,
-        episodes: [{
+        status: "success",
+        data: [{
             number: "1",
-            url: "/episode/1"
-        }]
+            url: "/watch"
+        }],
+        pagination: {
+            hasNextPage: false
+        }
     });
 }
 
 function extractStreamUrl() {
     return JSON.stringify({
-        success: true,
-        url: "https://anime-sama.fr/stream"
+        status: "success",
+        data: {
+            url: "https://anime-sama.fr/watch",
+            isDirect: false
+        }
     });
 }
 
 // Export minimal
 if (typeof module !== 'undefined') {
     module.exports = {
-        searchResults,
-        extractDetails,
-        extractEpisodes,
-        extractStreamUrl
+        searchResults: searchResults,
+        extractDetails: extractDetails,
+        extractEpisodes: extractEpisodes,
+        extractStreamUrl: extractStreamUrl
     };
 }
