@@ -3,7 +3,9 @@ async function searchResults(keyword) {
         const encodedKeyword = encodeURIComponent(keyword);
         const url = `https://anime-sama.fr/catalogue?search=${encodedKeyword}`;
         const html = await fetchText(url);
-        
+
+        console.log("HTML récupéré:", html); // Ajout de log pour vérifier le contenu HTML
+
         const results = [];
         const regex = /<a class="anime"[^>]*href="([^"]+)"[^>]*title="([^"]+)"[^>]*>[\s\S]*?<img[^>]*src="([^"]+)"/g;
         let match;
@@ -16,11 +18,24 @@ async function searchResults(keyword) {
             });
         }
 
+        // Si aucune correspondance n'est trouvée
+        if (results.length === 0) {
+            console.log("Aucun résultat trouvé pour:", keyword);
+            return JSON.stringify([]);
+        }
+
+        console.log("Résultats:", results); // Log des résultats avant de les renvoyer
         return JSON.stringify(results);
     } catch (err) {
-        console.log("Search Error:", err);
+        console.log("Erreur lors de la recherche:", err);
         return JSON.stringify([]);
     }
+}
+
+async function fetchText(url) {
+    const response = await fetch(url);
+    const text = await response.text();
+    return text;
 }
 
 async function extractDetails(url) {
