@@ -13,5 +13,5 @@
   "searchBaseUrl": "https://anime-sama.fr/catalogue?search=%s",
   "scriptUrl": "https://raw.githubusercontent.com/HakiETUDIANT/Voiranime/main/animesama.js",
   "type": "shows",
-  "asyncJS": true
+  "asyncJS": false
 }
