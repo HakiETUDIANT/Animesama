@@ -1,9 +1,18 @@
 {
-  "sourceName": "Anime-sama Fix",
-  "version": "1.1",
+  "sourceName": "Anime-sama",
+  "iconUrl": "https://anime-sama.fr/favicon.ico",
+  "author": {
+    "name": "Haki",
+    "icon": "https://anime-sama.fr/logo.png"
+  },
+  "version": "1.0.1",
+  "language": "French",
+  "streamType": "URL",
+  "quality": "HD",
   "baseUrl": "https://anime-sama.fr",
-  "scriptUrl": "https://raw.githubusercontent.com/[USER]/[REPO]/main/animesama.js",
+  "searchBaseUrl": "https://anime-sama.fr/catalogue?search=%s",
+  "scriptUrl": "https://raw.githubusercontent.com/HakiETUDIANT/Animesama/refs/heads/main/Animesama.js",
   "type": "shows",
-  "asyncJS": false,
-  "responseType": "object"
+  "asyncJS": true,
+  "enabled": true
 }
