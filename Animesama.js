@@ -1,60 +1,52 @@
-// Format 100% compatible Sora
-function searchResults(keyword) {
+// Format EXACT que Sora attend
+async function searchResults(keyword) {
     const response = {
-        status: "success",
-        data: [{
-            id: "search-redirect",
-            title: "Résultats pour: " + keyword,
-            url: "https://anime-sama.fr/catalogue?search=" + encodeURIComponent(keyword),
-            image: "https://anime-sama.fr/logo.png",
-            type: "anime"
+        success: true,
+        results: [{
+            id: "direct-search",
+            title: "Résultats pour " + keyword,
+            url: "/catalogue?search=" + encodeURIComponent(keyword),
+            image: "https://anime-sama.fr/logo.png"
         }],
-        pagination: {
-            hasNextPage: false
-        }
+        hasMore: false // Élément CRUCIAL contre le loading infini
     };
     return JSON.stringify(response);
 }
 
-function extractDetails() {
+async function extractDetails(url) {
     return JSON.stringify({
-        status: "success",
-        data: {
-            description: "Cliquez pour voir les épisodes sur Anime-sama",
-            episodesCount: 1
-        }
+        success: true,
+        description: "Anime disponible sur Anime-sama",
+        episodesCount: 1
     });
 }
 
-function extractEpisodes() {
+async function extractEpisodes(url) {
     return JSON.stringify({
-        status: "success",
-        data: [{
+        success: true,
+        episodes: [{
             number: "1",
-            url: "/watch"
+            url: url + "/episode-1"
         }],
-        pagination: {
-            hasNextPage: false
-        }
+        hasMore: false
     });
 }
 
-function extractStreamUrl() {
+async function extractStreamUrl(url) {
     return JSON.stringify({
-        status: "success",
-        data: {
-            url: "https://anime-sama.fr/watch",
-            isDirect: false
-        }
+        success: true,
+        url: "https://anime-sama.fr" + url,
+        quality: "HD"
     });
 }
 
-// Export minimal
+// Export ASYNCHRONE compatible
 if (typeof module !== 'undefined') {
     module.exports = {
         searchResults: searchResults,
         extractDetails: extractDetails,
         extractEpisodes: extractEpisodes,
-        extractStreamUrl: extractStreamUrl
+        extractStreamUrl: extractStreamUrl,
+        isAsync: true // Nécessaire avec asyncJS: true
     };
 }
