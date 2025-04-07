@@ -5,13 +5,13 @@
     "name": "Haki",
     "icon": "https://anime-sama.fr/logo.png"
   },
-  "version": "1.0.2",
+  "version": "1.0.3",
   "language": "French",
   "streamType": "URL",
   "quality": "HD",
   "baseUrl": "https://anime-sama.fr",
-  "searchBaseUrl": "https://anime-sama.fr/catalogue?search=%s",
-  "scriptUrl": "https://raw.githubusercontent.com/HakiETUDIANT/Animesama/refs/heads/main/Animesama.js",
+  "searchBaseUrl": "https://anime-sama.fr/catalogue/?search=%s",
+  "scriptUrl": "https://raw.githubusercontent.com/HakiETUDIANT/Animesama/main/Animesama.js",
   "type": "shows",
   "asyncJS": true,
   "enabled": true
