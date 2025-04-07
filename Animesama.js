@@ -5,6 +5,8 @@ async function searchResults(keyword) {
         const response = await fetch(searchUrl);
         const html = await response.text();
 
+        console.log("[ANIME-SAMA] HTML reçu:", html.slice(0, 500));
+
         const cards = html.split('<div class="bg-card-anime"');
         const results = [];
 
@@ -31,7 +33,7 @@ async function searchResults(keyword) {
         console.log("[ANIME-SAMA] Résultats:", results);
         return JSON.stringify(results);
     } catch (e) {
-        console.error("[ANIME-SAMA] Erreur searchResults:", e);
+        console.error("[ANIME-SAMA] Erreur searchResults:", e.message || e);
         return JSON.stringify([{
             title: "Erreur de recherche",
             image: "https://anime-sama.fr/logo.png",
