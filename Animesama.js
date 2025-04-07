@@ -1,9 +1,9 @@
 function searchResults(keyword) {
-    const response = {
+    return JSON.stringify({
         status: 200,
         data: [{
-            id: "direct-link",
-            title: "Voir les résultats sur Anime-sama",
+            id: "anime-sama-result",
+            title: "Voir sur Anime-sama : " + keyword,
             url: "/catalogue/?search=" + encodeURIComponent(keyword),
             image: "https://anime-sama.fr/logo.png",
             type: "anime",
@@ -13,15 +13,14 @@ function searchResults(keyword) {
             hasNext: false,
             total: 1
         }
-    };
-    return JSON.stringify(response);
+    });
 }
 
 function extractDetails(url) {
     return JSON.stringify({
         status: 200,
         data: {
-            description: "Cliquez pour voir les détails complets sur Anime-sama",
+            description: "Détails disponibles sur le site Anime-sama.",
             redirect: "https://anime-sama.fr" + url
         }
     });
@@ -52,7 +51,6 @@ function extractStreamUrl(url) {
     });
 }
 
-// Export pour Sora
 if (typeof module !== 'undefined') {
     module.exports = {
         searchResults,
