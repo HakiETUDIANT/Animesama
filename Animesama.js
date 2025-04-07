@@ -1,3 +1,4 @@
+// Fonction de recherche
 function searchResults(keyword) {
     return JSON.stringify({
         status: 200,
@@ -16,16 +17,18 @@ function searchResults(keyword) {
     });
 }
 
+// Fonction d'extraction des détails
 function extractDetails(url) {
     return JSON.stringify({
         status: 200,
         data: {
-            description: "Détails disponibles sur le site Anime-sama.",
+            description: "Cliquez pour voir les détails complets sur Anime-sama.",
             redirect: "https://anime-sama.fr" + url
         }
     });
 }
 
+// Fonction d'extraction des épisodes
 function extractEpisodes(url) {
     return JSON.stringify({
         status: 200,
@@ -40,6 +43,7 @@ function extractEpisodes(url) {
     });
 }
 
+// Fonction d'extraction du lien de stream
 function extractStreamUrl(url) {
     return JSON.stringify({
         status: 200,
@@ -51,12 +55,13 @@ function extractStreamUrl(url) {
     });
 }
 
+// Export Sora
 if (typeof module !== 'undefined') {
     module.exports = {
-        searchResults,
-        extractDetails,
-        extractEpisodes,
-        extractStreamUrl,
+        searchResults: searchResults,
+        extractDetails: extractDetails,
+        extractEpisodes: extractEpisodes,
+        extractStreamUrl: extractStreamUrl,
         _isSoraModule: true
     };
 }
