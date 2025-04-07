@@ -1,62 +1,53 @@
-// Debug minimal compatible
-function log(msg) {
-    if (typeof print === 'function') {
-        print(msg); // Méthode alternative
-    }
-}
-
-log("[ANIME-SAMA] Module initialisé");
-
-function searchResults(keyword) {
-    log("[ANIME-SAMA] Recherche: " + keyword);
-    
+// Format EXACT comme votre module working
+async function searchResults(keyword) {
     try {
-        const results = [{
-            title: keyword + " (Anime-sama)",
-            image: "https://anime-sama.fr/logo.png",
-            href: "/catalogue/?search=" + encodeURIComponent(keyword)
-        }];
-        
-        const response = JSON.stringify(results);
-        log("[ANIME-SAMA] Réponse: " + response);
-        return response;
-        
-    } catch (e) {
-        log("[ANIME-SAMA] Erreur: " + e);
-        return "[]";
+        const encodedKeyword = encodeURIComponent(keyword);
+        const response = await fetch(`https://anime-sama.fr/catalogue/?search=${encodedKeyword}`);
+        const html = await response.text();
+
+        // Parser le HTML comme dans votre exemple
+        const results = [];
+        const tempEl = document.createElement('div');
+        tempEl.innerHTML = html;
+
+        tempEl.querySelectorAll('.anime-card').forEach(card => { // Adaptez le sélecteur
+            results.push({
+                title: card.querySelector('.title').textContent.trim(),
+                image: card.querySelector('img').src,
+                href: card.querySelector('a').href
+            });
+        });
+
+        return JSON.stringify(results); // Format identique à votre module working
+
+    } catch (error) {
+        console.log('Search error:', error.message);
+        return JSON.stringify([]); // Toujours retourner un array
     }
 }
 
-function extractDetails(url) {
-    log("[ANIME-SAMA] Détails: " + url);
-    return JSON.stringify([{
-        description: "Regarder sur Anime-sama.fr",
-        aliases: "",
-        airdate: ""
-    }]);
+// Les autres fonctions doivent suivre LE MÊME format :
+async function extractDetails(url) {
+    // ... même structure que votre module working
+    return JSON.stringify([{ /* données */ }]);
 }
 
-function extractEpisodes(url) {
-    log("[ANIME-SAMA] Épisodes: " + url);
-    return JSON.stringify([{
-        number: "1",
-        href: url
-    }]);
+async function extractEpisodes(url) {
+    // ... même structure que votre module working
+    return JSON.stringify([{ /* données */ }]);
 }
 
-function extractStreamUrl(url) {
-    log("[ANIME-SAMA] Stream: " + url);
+async function extractStreamUrl(url) {
+    // ... même structure que votre module working
     return "https://anime-sama.fr" + url;
 }
 
-// Export sécurisé
-if (typeof module !== 'undefined' && module.exports) {
+// Export IDENTIQUE à votre module working
+if (typeof module !== 'undefined') {
     module.exports = {
-        searchResults: searchResults,
-        extractDetails: extractDetails,
-        extractEpisodes: extractEpisodes,
-        extractStreamUrl: extractStreamUrl
+        searchResults,
+        extractDetails,
+        extractEpisodes,
+        extractStreamUrl
     };
-} else {
-    log("[ANIME-SAMA] Export non détecté");
 }
