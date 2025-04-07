@@ -5,7 +5,12 @@ async function searchResults(keyword) {
         const searchUrl = `https://anime-sama.fr/catalogue/?search=${encodeURIComponent(keyword)}`;
         console.log("[ANIME-SAMA] URL:", searchUrl);
 
-        const response = await fetch(searchUrl);
+        const headers = {
+            "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1",
+            "Referer": "https://anime-sama.fr/"
+        };
+
+        const response = await fetch(searchUrl, { headers });
         console.log("[ANIME-SAMA] Statut réponse:", response.status);
 
         if (response.status !== 200) {
@@ -13,7 +18,7 @@ async function searchResults(keyword) {
         }
 
         const html = await response.text();
-        console.log("[ANIME-SAMA] HTML reçu (début):", html.slice(0, 500));
+        console.log("[ANIME-SAMA] HTML reçu (début):", html.slice(0, 300));
 
         const cards = html.split('<div class="bg-card-anime"');
         const results = [];
