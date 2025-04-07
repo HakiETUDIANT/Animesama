@@ -1,11 +1,10 @@
-// Fonction de recherche avec lien direct vers Anime-sama
-async function searchResults(keyword) {
-    return JSON.stringify({
+function searchResults(keyword) {
+    const response = {
         status: 200,
-        results: [{
-            id: "/catalogue/?search=" + encodeURIComponent(keyword),
+        data: [{
+            id: "direct-link",
             title: "Voir les résultats sur Anime-sama",
-            url: "https://anime-sama.fr/catalogue/?search=" + encodeURIComponent(keyword),
+            url: "/catalogue/?search=" + encodeURIComponent(keyword),
             image: "https://anime-sama.fr/logo.png",
             type: "anime",
             isDirect: true
@@ -14,11 +13,11 @@ async function searchResults(keyword) {
             hasNext: false,
             total: 1
         }
-    });
+    };
+    return JSON.stringify(response);
 }
 
-// Fonction pour afficher les détails
-async function extractDetails(url) {
+function extractDetails(url) {
     return JSON.stringify({
         status: 200,
         data: {
@@ -28,8 +27,7 @@ async function extractDetails(url) {
     });
 }
 
-// Fonction pour simuler un épisode (redirection directe)
-async function extractEpisodes(url) {
+function extractEpisodes(url) {
     return JSON.stringify({
         status: 200,
         data: [{
@@ -43,8 +41,7 @@ async function extractEpisodes(url) {
     });
 }
 
-// Fonction pour renvoyer directement l’URL de streaming
-async function extractStreamUrl(url) {
+function extractStreamUrl(url) {
     return JSON.stringify({
         status: 200,
         data: {
@@ -55,13 +52,13 @@ async function extractStreamUrl(url) {
     });
 }
 
-// Export Sora
+// Export pour Sora
 if (typeof module !== 'undefined') {
     module.exports = {
-        searchResults: searchResults,
-        extractDetails: extractDetails,
-        extractEpisodes: extractEpisodes,
-        extractStreamUrl: extractStreamUrl,
+        searchResults,
+        extractDetails,
+        extractEpisodes,
+        extractStreamUrl,
         _isSoraModule: true
     };
 }
