@@ -1,88 +1,62 @@
-// Debug initial
-console.log("[DEBUG] Module Anime-sama chargé");
+// Debug minimal compatible
+function log(msg) {
+    if (typeof print === 'function') {
+        print(msg); // Méthode alternative
+    }
+}
 
-async function searchResults(keyword) {
-    console.log("[DEBUG] Recherche lancée pour:", keyword);
+log("[ANIME-SAMA] Module initialisé");
+
+function searchResults(keyword) {
+    log("[ANIME-SAMA] Recherche: " + keyword);
     
     try {
-        const encoded = encodeURIComponent(keyword);
-        console.log("[DEBUG] Terme encodé:", encoded);
-
-        const mockResults = [{
-            title: "Test Anime",
+        const results = [{
+            title: keyword + " (Anime-sama)",
             image: "https://anime-sama.fr/logo.png",
-            href: "/catalogue/?search=test"
+            href: "/catalogue/?search=" + encodeURIComponent(keyword)
         }];
-
-        console.log("[DEBUG] Résultats mockés:", mockResults);
-        const jsonResponse = JSON.stringify(mockResults);
-        console.log("[DEBUG] JSON généré:", jsonResponse);
-
-        return jsonResponse;
-    } catch (error) {
-        console.error("[ERREUR] searchResults:", error);
-        return JSON.stringify([]);
+        
+        const response = JSON.stringify(results);
+        log("[ANIME-SAMA] Réponse: " + response);
+        return response;
+        
+    } catch (e) {
+        log("[ANIME-SAMA] Erreur: " + e);
+        return "[]";
     }
 }
 
-async function extractDetails(url) {
-    console.log("[DEBUG] Extraction détails pour URL:", url);
-    
-    try {
-        const mockDetails = [{
-            description: "Description test",
-            aliases: "",
-            airdate: ""
-        }];
-
-        console.log("[DEBUG] Détails mockés:", mockDetails);
-        return JSON.stringify(mockDetails);
-    } catch (error) {
-        console.error("[ERREUR] extractDetails:", error);
-        return JSON.stringify([]);
-    }
+function extractDetails(url) {
+    log("[ANIME-SAMA] Détails: " + url);
+    return JSON.stringify([{
+        description: "Regarder sur Anime-sama.fr",
+        aliases: "",
+        airdate: ""
+    }]);
 }
 
-async function extractEpisodes(url) {
-    console.log("[DEBUG] Extraction épisodes pour URL:", url);
-    
-    try {
-        const mockEpisodes = [{
-            number: "1",
-            href: "/episode/1"
-        }];
-
-        console.log("[DEBUG] Épisodes mockés:", mockEpisodes);
-        return JSON.stringify(mockEpisodes);
-    } catch (error) {
-        console.error("[ERREUR] extractEpisodes:", error);
-        return JSON.stringify([]);
-    }
+function extractEpisodes(url) {
+    log("[ANIME-SAMA] Épisodes: " + url);
+    return JSON.stringify([{
+        number: "1",
+        href: url
+    }]);
 }
 
-async function extractStreamUrl(url) {
-    console.log("[DEBUG] Extraction stream pour URL:", url);
-    
-    try {
-        const mockUrl = "https://anime-sama.fr" + url;
-        console.log("[DEBUG] URL mockée:", mockUrl);
-        return mockUrl;
-    } catch (error) {
-        console.error("[ERREUR] extractStreamUrl:", error);
-        return "";
-    }
+function extractStreamUrl(url) {
+    log("[ANIME-SAMA] Stream: " + url);
+    return "https://anime-sama.fr" + url;
 }
 
-// Debug export
-console.log("[DEBUG] Préparation exports");
-if (typeof module !== 'undefined') {
+// Export sécurisé
+if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
-        searchResults,
-        extractDetails,
-        extractEpisodes,
-        extractStreamUrl
+        searchResults: searchResults,
+        extractDetails: extractDetails,
+        extractEpisodes: extractEpisodes,
+        extractStreamUrl: extractStreamUrl
     };
-    console.log("[DEBUG] Exports terminés");
 } else {
-    console.warn("[WARN] 'module' non défini");
+    log("[ANIME-SAMA] Export non détecté");
 }
