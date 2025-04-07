@@ -7,28 +7,24 @@ async function searchResults(keyword) {
         const response = await fetch(searchUrl);
         const html = await response.text();
 
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
+        const $ = cheerio.load(html); // Utilisation de cheerio pour parser
 
         const results = [];
-        const cards = doc.querySelectorAll('.bg-card-anime');
-
-        cards.forEach(card => {
-            const title = card.querySelector('h3')?.textContent?.trim();
-            const image = card.querySelector('img')?.getAttribute('src');
-            const href = card.querySelector('a')?.getAttribute('href');
+        $('.bg-card-anime').each((i, el) => {
+            const title = $(el).find('h3').text().trim();
+            const image = $(el).find('img').attr('src');
+            const href = $(el).find('a').attr('href');
 
             if (title && href) {
                 results.push({
                     title: title,
-                    image: image ? (image.startsWith('http') ? image : `https://anime-sama.fr${image}`) : 'https://anime-sama.fr/logo.png',
+                    image: image?.startsWith('http') ? image : `https://anime-sama.fr${image}`,
                     href: href.startsWith('http') ? href : `https://anime-sama.fr${href}`
                 });
             }
         });
 
         console.log("[ANIME-SAMA] Résultats:", results);
-
         return JSON.stringify(results);
     } catch (e) {
         console.error("[ANIME-SAMA] Erreur searchResults:", e);
