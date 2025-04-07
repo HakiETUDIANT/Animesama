@@ -1,39 +1,42 @@
-// Solution garantie sans loading infini
-function searchResults(keyword) {
-    const response = {
+async function searchResults(keyword) {
+    return JSON.stringify({
         status: 200,
         results: [{
-            id: "direct-link",
+            id: "/catalogue?search=" + encodeURIComponent(keyword),
             title: "Voir les résultats sur Anime-sama",
             url: "https://anime-sama.fr/catalogue?search=" + encodeURIComponent(keyword),
             image: "https://anime-sama.fr/logo.png",
             type: "anime",
-            isDirect: true  // Indique que c'est un lien vers le site
+            isDirect: true
         }],
         pagination: {
-            hasNext: false,  // Bloque le loading infini
+            hasNext: false,
             total: 1
-        }
-    };
-    return JSON.stringify(response);
-}
-
-function extractDetails(url) {
-    return JSON.stringify({
-        status: 200,
-        data: {
-            description: "Cliquez pour voir les détails complets sur Anime-sama",
-            redirect: "https://anime-sama.fr" + url
         }
     });
 }
 
-function extractEpisodes(url) {
+async function extractDetails(url) {
     return JSON.stringify({
         status: 200,
-        data: [{
+        results: {
+            description: "Voir les détails sur Anime-sama",
+            image: "https://anime-sama.fr/logo.png",
+            title: "Anime-sama",
+            metadata: {
+                redirect: "https://anime-sama.fr" + url
+            }
+        }
+    });
+}
+
+async function extractEpisodes(url) {
+    return JSON.stringify({
+        status: 200,
+        results: [{
             number: "1",
-            url: url,
+            title: "Voir sur Anime-sama",
+            url: "https://anime-sama.fr" + url,
             isDirect: true
         }],
         pagination: {
@@ -42,24 +45,23 @@ function extractEpisodes(url) {
     });
 }
 
-function extractStreamUrl(url) {
+async function extractStreamUrl(url) {
     return JSON.stringify({
         status: 200,
-        data: {
-            url: "https://anime-sama.fr" + url,
+        results: {
+            url: url,
             quality: "HD",
             isDirect: true
         }
     });
 }
 
-// Export spécial pour Sora
 if (typeof module !== 'undefined') {
     module.exports = {
-        searchResults: searchResults,
-        extractDetails: extractDetails,
-        extractEpisodes: extractEpisodes,
-        extractStreamUrl: extractStreamUrl,
-        _isSoraModule: true  // Nouveau flag crucial
+        searchResults,
+        extractDetails,
+        extractEpisodes,
+        extractStreamUrl,
+        _isSoraModule: true
     };
 }
