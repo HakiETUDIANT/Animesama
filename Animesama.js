@@ -2,7 +2,7 @@
 function searchResults(keyword) {
     const response = {
         status: 200,
-        data: [{
+        results: [{
             id: "direct-link",
             title: "Voir les résultats sur Anime-sama",
             url: "https://anime-sama.fr/catalogue?search=" + encodeURIComponent(keyword),
