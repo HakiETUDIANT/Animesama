@@ -1,9 +1,9 @@
 {
   "sourceName": "Anime-sama",
-  "iconUrl": "https://anime-sama.fr/favicon.ico",
+  "iconUrl": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://anime-sama.fr&size=256",
   "author": {
     "name": "Haki",
-    "icon": "https://anime-sama.fr/logo.png"
+    "icon": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://anime-sama.fr&size=256"
   },
   "version": "1.0.4",
   "language": "French",
