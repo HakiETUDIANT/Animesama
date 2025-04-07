@@ -1,42 +1,54 @@
 async function searchResults(keyword) {
     try {
-        // 1. Construction de l'URL de recherche
         const searchUrl = `https://anime-sama.fr/catalogue/?search=${encodeURIComponent(keyword)}`;
-        
-        // 2. Récupération du HTML
+        console.log("[ANIME-SAMA] URL:", searchUrl);
+
         const response = await fetch(searchUrl);
         const html = await response.text();
-        
-        // 3. Parsing avec DOMParser
+        console.log("[ANIME-SAMA] HTML reçu:", html.substring(0, 300));
+
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
-        
-        // 4. Extraction des résultats (sélecteurs à adapter)
+
         const results = [];
-        const items = doc.querySelectorAll('.anime-card, .card, [class*="item"]');
-        
+
+        // TESTER plusieurs structures connues
+        const items = doc.querySelectorAll('.anime-card, .card, .card-anime, .grid-item, article');
+
+        console.log(`[ANIME-SAMA] ${items.length} éléments trouvés`);
+
         items.forEach(item => {
-            const title = item.querySelector('.title, h3')?.textContent?.trim();
-            const image = item.querySelector('img')?.src;
-            const href = item.querySelector('a')?.href;
-            
-            if (title && href) {
-                results.push({
-                    title: title,
-                    image: image || 'https://anime-sama.fr/logo.png',
-                    href: href.startsWith('http') ? href : `https://anime-sama.fr${href}`
-                });
+            try {
+                const title = item.querySelector('.title, h3')?.textContent?.trim();
+                const image = item.querySelector('img')?.src;
+                const href = item.querySelector('a')?.href;
+
+                if (title && href) {
+                    results.push({
+                        title,
+                        image: image || "https://anime-sama.fr/logo.png",
+                        href: href.startsWith('http') ? href : `https://anime-sama.fr${href}`
+                    });
+                }
+            } catch (err) {
+                console.log("[ANIME-SAMA] Erreur sur un item:", err);
             }
         });
-        
-        return JSON.stringify(results.length > 0 ? results : [{
-            title: `Aucun résultat pour "${keyword}"`,
-            href: searchUrl,
-            image: 'https://anime-sama.fr/logo.png'
-        }]);
-        
+
+        if (results.length === 0) {
+            console.log("[ANIME-SAMA] Aucun résultat");
+            return JSON.stringify([{
+                title: `Aucun résultat pour "${keyword}"`,
+                href: searchUrl,
+                image: "https://anime-sama.fr/logo.png"
+            }]);
+        }
+
+        console.log("[ANIME-SAMA] Résultats:", results);
+        return JSON.stringify(results);
+
     } catch (error) {
-        console.error("Search error:", error);
+        console.error("[ANIME-SAMA] Erreur searchResults:", error);
         return JSON.stringify([{
             title: "Erreur de recherche",
             href: "#",
@@ -45,7 +57,7 @@ async function searchResults(keyword) {
     }
 }
 
-// Fonctions génériques pour tous les animes
+// Fonctions simplifiées
 async function extractDetails(url) {
     return JSON.stringify([{
         description: "Anime disponible sur Anime-sama",
@@ -57,7 +69,7 @@ async function extractDetails(url) {
 async function extractEpisodes(url) {
     return JSON.stringify([{
         number: "1",
-        href: url + "/1"
+        href: `${url}/1`
     }]);
 }
 
