@@ -1,63 +1,64 @@
 async function searchResults(keyword) {
     try {
         const encoded = encodeURIComponent(keyword);
-        return {
-            status: 200,
-            data: [{
-                id: "anime-sama-result",
-                title: "Voir sur Anime-sama : " + keyword,
-                url: "/catalogue/?search=" + encoded,
-                image: "https://anime-sama.fr/logo.png",
-                type: "anime",
-                isDirect: true
-            }],
-            pagination: {
-                hasNext: false,
-                total: 1
-            }
-        };
+        const results = [{
+            title: "Résultats pour: " + keyword,
+            image: "https://anime-sama.fr/logo.png",
+            href: "/catalogue/?search=" + encoded
+        }];
+        
+        console.log(JSON.stringify(results)); // Log pour débogage
+        return JSON.stringify(results);
+        
     } catch (error) {
-        return {
-            status: 500,
-            data: [],
-            message: "Erreur lors de la recherche"
-        };
+        console.log('Search error:', error);
+        return JSON.stringify([]);
     }
 }
 
-async function extractDetails(url) {
-    return {
-        status: 200,
-        data: {
-            description: "Cliquez pour voir les détails complets sur Anime-sama.",
-            redirect: "https://anime-sama.fr" + url
-        }
-    };
+async function extractDetails(showId) {
+    try {
+        const details = [{
+            description: "Anime disponible sur Anime-sama",
+            aliases: "",
+            airdate: ""
+        }];
+        
+        console.log(JSON.stringify(details));
+        return JSON.stringify(details);
+        
+    } catch (error) {
+        console.log('Details error:', error);
+        return JSON.stringify([]);
+    }
 }
 
-async function extractEpisodes(url) {
-    return {
-        status: 200,
-        data: [{
+async function extractEpisodes(showId) {
+    try {
+        const episodes = [{
             number: "1",
-            url: url,
-            isDirect: true
-        }],
-        pagination: {
-            hasNext: false
-        }
-    };
+            href: showId + "/1"
+        }];
+        
+        console.log(JSON.stringify(episodes));
+        return JSON.stringify(episodes);
+        
+    } catch (error) {
+        console.log('Episodes error:', error);
+        return JSON.stringify([]);
+    }
 }
 
 async function extractStreamUrl(url) {
-    return {
-        status: 200,
-        data: {
-            url: "https://anime-sama.fr" + url,
-            quality: "HD",
-            isDirect: true
-        }
-    };
+    try {
+        const streamUrl = "https://anime-sama.fr" + url;
+        console.log(streamUrl);
+        return streamUrl;
+        
+    } catch (error) {
+        console.log('Stream error:', error);
+        return "";
+    }
 }
 
 // Export pour Sora
@@ -66,7 +67,6 @@ if (typeof module !== 'undefined') {
         searchResults,
         extractDetails,
         extractEpisodes,
-        extractStreamUrl,
-        _isSoraModule: true
+        extractStreamUrl
     };
 }
